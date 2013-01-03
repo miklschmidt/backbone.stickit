@@ -131,12 +131,15 @@
 						
 						# Bind events to the element which will update the model with changes.
 						_.each config.eventsOverride or getModelEvents($el), (type) ->
-							self.events[type + " " + selector] = ->
-								val = getElVal($el, isContenteditable($el))
-								
-								# Don't update the model if false is returned from the `updateModel` configuration.
-								setVal model, modelAttr, val, options, config.onSet, self  if evaluateBoolean(self, config.updateModel, val, modelAttr)
-
+							# Ugly hack that makes this work in node-webkit
+							setTimeout (() ->
+								# Chaplin style events
+								self.delegate type, selector, () ->
+									val = getElVal($el, isContenteditable($el))
+									
+									# Don't update the model if false is returned from the `updateModel` configuration.
+									setVal model, modelAttr, val, options, config.onSet, self  if evaluateBoolean(self, config.updateModel, val, modelAttr)
+							), 1
 					
 					# Setup a `change:modelAttr` observer to keep the view element in sync.
 					# `modelAttr` may be an array of attributes or a single string value.
@@ -147,9 +150,6 @@
 
 					updateViewBindEl self, $el, config, getVal(model, modelAttr, config, self), model, true
 
-			
-			# We added to `this.events` so we need to re-delegate.
-			@delegateEvents()
 			
 			# Wrap remove so that we can remove model events when this view is removed.
 			@remove = _.wrap(@remove, (oldRemove) ->
@@ -201,7 +201,7 @@
 		$el.is "input"
 
 	isContenteditable = ($el) ->
-		$el.is "[contenteditable=\"true\"]"
+		$el.attr('contenteditable')?
 
 	
 	# Given a function, string (view function reference), or a boolean
