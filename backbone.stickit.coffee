@@ -138,7 +138,10 @@
 									val = getElVal($el, isContenteditable($el))
 									
 									# Don't update the model if false is returned from the `updateModel` configuration.
-									setVal model, modelAttr, val, options, config.onSet, self  if evaluateBoolean(self, config.updateModel, val, modelAttr)
+									if evaluateBoolean(self, config.updateModel, val, modelAttr)
+										setVal model, modelAttr, val, options, config.onSet, self
+										if config.persistUpdates is yes
+											model.save()
 							), 1
 					
 					# Setup a `change:modelAttr` observer to keep the view element in sync.
@@ -265,6 +268,7 @@
 			val = applyViewFn(context, onSet, val, attr)
 
 		model.set attr, val, options
+		console.log model,attr,val,options,context
 
 	
 	# Returns the given `field`'s value from the `model`, escaping and formatting if necessary.
