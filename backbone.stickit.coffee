@@ -229,6 +229,8 @@
 
 		bindCollection = (collection) ->
 			models = collection.models or collection
+			unless collection.models?
+				return
 			for model in collection.models
 				bindModel model
 
