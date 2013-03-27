@@ -131,18 +131,18 @@
 						
 						# Bind events to the element which will update the model with changes.
 						_.each config.eventsOverride or getModelEvents($el), (type) ->
-							# Ugly hack that makes this work in node-webkit
-							setTimeout (() ->
-								# Chaplin style events
-								self.delegate type, selector, () ->
-									val = getElVal($el, isContenteditable($el))
-									
-									# Don't update the model if false is returned from the `updateModel` configuration.
-									if evaluateBoolean(self, config.updateModel, val, modelAttr)
-										setVal model, modelAttr, val, options, config.onSet, self
-										if config.persistUpdates is yes
-											model.save()
-							), 1
+							# # Ugly hack that makes this work in node-webkit
+							# setTimeout (() ->
+							# Chaplin style events
+							self.delegate type, selector, () ->
+								val = getElVal($el, isContenteditable($el))
+								
+								# Don't update the model if false is returned from the `updateModel` configuration.
+								if evaluateBoolean(self, config.updateModel, val, modelAttr)
+									setVal model, modelAttr, val, options, config.onSet, self
+									if config.persistUpdates is yes
+										model.save()
+							# ), 1
 					
 					# Setup a `change:modelAttr` observer to keep the view element in sync.
 					# `modelAttr` may be an array of attributes or a single string value.
