@@ -270,7 +270,6 @@
 			val = applyViewFn(context, onSet, val, attr)
 
 		model.set attr, val, options
-		console.log model,attr,val,options,context
 
 	
 	# Returns the given `field`'s value from the `model`, escaping and formatting if necessary.
